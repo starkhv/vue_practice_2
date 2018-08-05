@@ -1,0 +1,91 @@
+<html>
+	<head>
+		<script src='static/js/vue.js'></script>
+		<script>
+			Vue.component('todo-item', {
+				props: ['todo'],
+				template: '<li> {{ todo }} {{ todo.id }} </li>',
+			});
+			Vue.component('counter-button', {
+				template: "<button @click='count+=1'> You clicked me {{ count }} times </button>",
+				data: function() {
+					return {
+						count: 0,
+					}
+				},
+			});
+			Vue.component('base-checkbox', {
+				model: {
+					prop: 'checked',
+					event: 'change',
+				},
+				props: {
+					checked: Boolean
+				},
+				template: `
+				<input
+					type='checkbox'
+					v:bind:checked='checked'
+					v-on:change="$emit('change', $event.target.checked)">
+				`,
+			});
+
+		</script>
+		<style>
+			.with-padding: {
+				padding: 50px;
+			}
+			.with-border: {
+				border: 5px solid black;
+			}
+		</style>
+	</head>
+	<body>
+		<div id='some-id'>
+			Hello World {{ something }}
+			<span v-bind:title='spanTitle'>{{spanContent}}</span>
+			<span v-if='spanVisible'>You can see this only if spanVisible is True</span>
+			<ul><li v-for='todo in todos'>{{ todo }}</li></ul>
+			<button v-on:click="reverseMessage">Reverse Message</button>
+			<input v-model="something">
+			<ol>
+				<todo-item v-bind:todo='todo' :key='todo.id' v-for='todo in todos'></todo-item>
+			</ol>
+			<span>{{ reverseSomething }}</span>
+			<div v-bind:class="{'with-border': withBorder, 'with-padding': withPadding}"> Class toggle testing </div>
+			<button @click='withBorder = !withBorder'>Toggle border</button>
+			<button @click='withPadding = !withPadding'>Toggle padding</button>
+			<input type='text' value='some initial value' v-model='inputVar'>
+			<counter-button></counter-button>
+			<counter-button></counter-button>
+			<counter-button></counter-button>
+			<base-checkbox v-model="lovingVue"></base-checkbox>
+		</div>
+		<script>
+			var someId = new Vue({
+				el: '#some-id',
+				data: {
+					something: 'this is something',
+					spanContent: 'this span shows a message on hover',
+					spanTitle: 'this is a span title',
+					spanVisible: true,
+					todos: ['first todo', 'second todo'],
+					withBorder: true,
+					withPadding: false,
+					inputVar: 'some other initial value',
+					lovingVue: false,
+				},
+				methods: {
+					reverseMessage: function () {
+						this.something = this.something.split('').reverse().join('');
+					},
+				},
+				computed: {
+					reverseSomething: function () {
+						return this.something.split('').reverse().join('');
+						},
+				},
+			});
+		</script>
+	</body>
+</html>
